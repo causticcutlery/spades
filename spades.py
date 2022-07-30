@@ -160,12 +160,25 @@ def deal_hand(deck):
         elif(i%4 == 3):
           playerWest.append(deck[i])      
     
+    #TODO sort based on deck list
     playerNorth.sort()
     playerEast.sort()
     playerSouth.sort()
     playerWest.sort()
       
     return [playerNorth, playerEast, playerSouth, playerWest]
+  
+def count_books(hand):
+    #TODO
+    return 0
+  
+def team():
+    #TODO
+    return 0
+    
+def nil():
+    #TODO
+    return 0
   
 for i in range(10000): 
     dealtCards = deal_hand(deck)
