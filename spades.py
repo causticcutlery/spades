@@ -5,13 +5,14 @@ import random
 #First char represents suit: S - Spades, H - Hearts, C - Clubs, D - Diamonds
 #Second char represnts value: B - big joker, L - little joker, Ace, King, Queen, Jack, Ten, and 9-2. Note: 2 of Spades is the third joker (S2). 2C is low.
 deck = ['SB', 'SL', 'S2', 'SA', 'SK', 'SQ', 'SJ', 'ST', 'S9', 'S8', 'S7', 'S6', 'S5', 'S4', 'S3', 'HA', 'HK', 'HQ', 'HJ', 'HT', 'H9', 'H8', 'H7', 'H6', 'H5', 'H4', 'H3', 'CA', 'CK', 'CQ', 'CJ', 'CT', 'C9', 'C8', 'C7', 'C6', 'C5', 'C4', 'C3', 'C2', 'DA', 'DK', 'DQ', 'DJ', 'DT', 'D9', 'D8', 'D7', 'D6', 'D5', 'D4', 'D3']
-
 #Function to calculate the value of a hand
 #Value is calculated on subjective values
 #TODO: create a more objective rating system based on the chance a card takes a book
 def count_value(hand):
     value=0
-  
+    global misdeal 
+    misdeal = False
+    
     countSpades = (len([card for card in hand if card[0]=="S"]))
     countHearts = (len([card for card in hand if card[0]=="H"]))
     countClubs = (len([card for card in hand if card[0]=="C"]))
@@ -55,9 +56,9 @@ def count_value(hand):
         #Value changes based on the amount of cards in that suit
         #This is because the more of a suit a hand has, the more likely it is for another player to cut with spades
         elif(card[1] == "A"):
-            if((countSuits[1][countSuits[0].index(card[0]) <= 3):
+            if((countSuits[1][countSuits[0].index(card[0])]) <= 3):
                 value+=4
-            elif((countSuits[1][countSuits[0].index(card[0]) == 4):
+            elif((countSuits[1][countSuits[0].index(card[0])]) == 4):
                 value+=2
             else:
                 value+=0
@@ -65,11 +66,11 @@ def count_value(hand):
         #Value of an H/C/D K is normally worth 3
         #Value changes based on the amount of cards in that suit
         elif(card[1] == "K"):
-            if((countSuits[1][countSuits[0].index(card[0]) == 1):
+            if((countSuits[1][countSuits[0].index(card[0])]) == 1):
                 value+=0
-            elif((countSuits[1][countSuits[0].index(card[0]) <= 3):
+            elif((countSuits[1][countSuits[0].index(card[0])]) <= 3):
                 value+=3
-            elif((countSuits[1][countSuits[0].index(card[0]) == 4):
+            elif((countSuits[1][countSuits[0].index(card[0])]) == 4):
                 value+=2
             else:
                 value+=0
@@ -77,9 +78,9 @@ def count_value(hand):
         #Value of an H/C/D Q is normally worth 2
         #Value changes based on the amount of cards in that suit
         elif(card[1] == "Q"):
-            if((countSuits[1][countSuits[0].index(card[0]) <= 2):
+            if((countSuits[1][countSuits[0].index(card[0])]) <= 2):
                 value+=0
-            if((countSuits[1][countSuits[0].index(card[0]) == 3):
+            if((countSuits[1][countSuits[0].index(card[0])]) == 3):
                 value+=1
             else:
                 value+=0
@@ -138,7 +139,7 @@ def count_value(hand):
         #If a hand is dealt no spades, the player can call a miseal
     if(countSpades == 0):
         misdeal = True
-    print(value)    
+        
     return value
       
 def deal_hand(deck):
@@ -166,13 +167,14 @@ def deal_hand(deck):
       
     return [playerNorth, playerEast, playerSouth, playerWest]
   
-for i in range(100): 
+for i in range(10000): 
     dealtCards = deal_hand(deck)
     playerNorth = dealtCards[0]
     playerEast = dealtCards[1]
     playerSouth = dealtCards[2]
     playerWest = dealtCards[3]
-      
+     
+    ''' 
     print("Hand: " + ', '.join(playerNorth) + " | Value: " + str(count_value(playerNorth)))
     print("//////////////")
     print("Hand: " + ', '.join(playerEast) + " | Value: " + str(count_value(playerEast)))
@@ -181,7 +183,11 @@ for i in range(100):
     print("//////////////")
     print("Hand: " + ', '.join(playerWest) + " | Value: " + str(count_value(playerWest)))
     print("============================================================")
-      
+    '''
+    print(' '.join(playerNorth) + ', ' + str(i) + ', ' + str(count_value(playerNorth)) + ', north' + ', ' + str(misdeal))
+    print(' '.join(playerEast) + ', ' + str(i) + ', ' + str(count_value(playerEast)) + ', east' + ', ' + str(misdeal))
+    print(' '.join(playerSouth) + ', ' + str(i) + ', ' + str(count_value(playerSouth)) + ', south' + ', ' + str(misdeal))
+    print(' '.join(playerWest) + ', ' + str(i) + ', ' + str(count_value(playerWest)) + ', west' + ', ' + str(misdeal))
       
       
       
