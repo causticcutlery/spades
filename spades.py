@@ -12,7 +12,7 @@ def count_value(hand):
     value=0
     global misdeal 
     misdeal = False
-    
+    countedNil = False
     countSpades = (len([card for card in hand if card[0]=="S"]))
     countHearts = (len([card for card in hand if card[0]=="H"]))
     countClubs = (len([card for card in hand if card[0]=="C"]))
@@ -139,8 +139,14 @@ def count_value(hand):
         #If a hand is dealt no spades, the player can call a miseal
     if(countSpades == 0):
         misdeal = True
-        
-    return value
+    
+    nilChance = calculate_nil_percentage(hand)
+    
+    #If nil is more likely, then return 20*nil chance as the hand value
+    if(20*nilChance[0] > value):
+        return 20*nilChance[0]
+    else:
+        return value
       
 def deal_hand(deck):
     playerNorth = []
@@ -176,9 +182,142 @@ def team():
     #TODO
     return 0
     
-def nil():
+def calculate_nil_percentage(hand):
     #TODO
-    return 0
+    
+    
+    voidSuit = False
+    chance = 1.0
+    sumFaceValue = 0
+    countSpades = (len([card for card in hand if card[0]=="S"]))
+    countHearts = (len([card for card in hand if card[0]=="H"]))
+    countClubs = (len([card for card in hand if card[0]=="C"]))
+    countDiamonds = (len([card for card in hand if card[0]=="D"]))
+    countSuits = [['S','H','C','D'],[countSpades,countHearts,countClubs,countDiamonds]]
+    if(countHearts == 0 or countClubs == 0 or countDiamonds == 0):
+        voidSuit = True
+        
+    for card in hand:
+        if(card == "SB"):
+            sumFaceValue += 17       
+        elif(card == "SL"):
+            sumFaceValue += 16        
+        elif(card == "S2"):
+            sumFaceValue += 15        
+        elif(card[1] == "A"):
+            sumFaceValue += 14
+        elif(card[1] == "K"):
+            sumFaceValue += 13        
+        elif(card[1] == "Q"):
+            sumFaceValue += 12   
+        elif(card[1] == "J"):
+            sumFaceValue += 11   
+        elif(card[1] == "T"):
+            sumFaceValue += 10   
+        elif(card[1] == "9"):
+            sumFaceValue += 9   
+        elif(card[1] == "8"):
+            sumFaceValue += 8   
+        elif(card[1] == "7"):
+            sumFaceValue += 7   
+        elif(card[1] == "6"):
+            sumFaceValue += 6   
+        elif(card[1] == "5"):
+            sumFaceValue += 5   
+        elif(card[1] == "4"):
+            sumFaceValue += 4   
+        elif(card[1] == "3"):
+            sumFaceValue += 3   
+        elif(card == "C2"):
+            sumFaceValue += 2   
+            
+        averageFaceValue = sumFaceValue / 13
+    
+    #Starts with initial percentages based on the spades
+    #Percentages pulled from Monty VanDover's "The Complete Book of Spades" section on "Probabilities of Distribution."
+    if("SB" in hand):
+        chance *= 0.0
+    if("SL" in hand and "S2" in hand):
+        chance *= 0.0
+    if("S2" in hand and "SA" in hand and "SK" in hand):
+        chance *= 0.0        
+    if("SL" in hand):
+        chance *= 0.33
+    if("S2" in hand):
+        chance *= 0.56
+    if("SA" in hand):
+        chance *= 0.70
+    if("SK" in hand):
+        chance *= 0.81
+    if("SQ" in hand):
+        chance *= 0.88
+    if("S2" in hand and "SA" in hand):
+        chance *= 0.11
+    if(("S2" in hand and "SK" in hand) or ("SA" in hand and "SK" in hand)):
+        chance *= 0.11
+    if(("SA" in hand and "SQ" in hand) or ("SK" in hand and "SQ" in hand)):
+        chance *= 0.41
+    if(("SK" in hand and "SJ" in hand) or ("SQ" in hand and "SJ" in hand)):
+        chance *= 0.55       
+    if(("SA" in hand and "SK" in hand and "SJ" in hand) or ("SK" in hand and "SQ" in hand and "SJ" in hand)):
+        chance *= 0.10
+    if(("SK" in hand and "SQ" in hand and "ST" in hand) or ("SQ" in hand and "SJ" in hand and "ST" in hand)):
+        chance *= 0.20
+    if(("SQ" in hand and "SJ" in hand and "S9" in hand) or ("SJ" in hand and "ST" in hand and "S9" in hand)):
+        chance *= 0.31           
+   
+    if("HA" in hand and countHearts == 1 and not voidSuit): 
+        chance *= 0.0     
+    if("CA" in hand and countClubs == 1 and not voidSuit):
+        chance *= 0.0       
+    if("DA" in hand and countDiamonds == 1 and not voidSuit):
+        chance *= 0.0
+    if("HK" in hand and countHearts == 1 and not voidSuit):
+        chance *= 0.33        
+    if("CK" in hand and countClubs == 1 and not voidSuit):
+        chance *= 0.33        
+    if("DK" in hand and countDiamonds == 1 and not voidSuit):
+        chance *= 0.33         
+    
+    #todo make this more math
+    if(countSpades >= 8):
+        chance *= 0.0
+    elif(countSpades >= 6):
+        chance *= 0.2
+    elif(countSpades >= 4):
+        chance *= 0.6
+    elif(countSpades >= 2):
+        chance *= 0.8
+    elif(countSpades == 0):
+        chance *= 1.20
+    #todo calculate average face Value
+    
+    std = 14
+    mean = 113
+    if(sumFaceValue < (mean-(std*3))):
+        chance = 1.6
+    elif(sumFaceValue < (mean-(std*2))):
+        chance *= 1.4
+    elif(sumFaceValue < (mean-(std*1))):
+        chance *= 1.2
+    elif(sumFaceValue < (mean)):
+        chance *= 1.0
+    elif(sumFaceValue < (mean+(std*1))):    
+        chance *= 0.8
+    elif(sumFaceValue < (mean+(std*2))):
+        chance *= 0.6
+    elif(sumFaceValue < (mean+(std*3))):
+        chance *= 0.4
+    else:
+        chance *= 0.0
+    
+    if(chance > 1):
+        chance = 1
+    
+    return [chance, sumFaceValue, averageFaceValue]
+
+
+print("hand,round,value,player,misdeal,nil,sum,avg")
   
 for i in range(10000): 
     dealtCards = deal_hand(deck)
@@ -197,11 +336,13 @@ for i in range(10000):
     print("Hand: " + ', '.join(playerWest) + " | Value: " + str(count_value(playerWest)))
     print("============================================================")
     '''
-    print(' '.join(playerNorth) + ', ' + str(i) + ', ' + str(count_value(playerNorth)) + ', north' + ', ' + str(misdeal))
-    print(' '.join(playerEast) + ', ' + str(i) + ', ' + str(count_value(playerEast)) + ', east' + ', ' + str(misdeal))
-    print(' '.join(playerSouth) + ', ' + str(i) + ', ' + str(count_value(playerSouth)) + ', south' + ', ' + str(misdeal))
-    print(' '.join(playerWest) + ', ' + str(i) + ', ' + str(count_value(playerWest)) + ', west' + ', ' + str(misdeal))
-      
+
+    print(' '.join(playerNorth) + ', ' + str(i) + ', ' + str(count_value(playerNorth)) + ', north' + ', ' + str(misdeal) + ', ' + str(calculate_nil_percentage(playerNorth)[0]) + ', ' + str(calculate_nil_percentage(playerNorth)[1]) + ', ' + str(calculate_nil_percentage(playerNorth)[2]))
+    print(' '.join(playerEast) + ', ' + str(i) + ', ' + str(count_value(playerEast)) + ', east' + ', ' + str(misdeal) + ', ' + str(calculate_nil_percentage(playerEast)[0]) + ', ' + str(calculate_nil_percentage(playerEast)[1]) + ', ' + str(calculate_nil_percentage(playerEast)[2]))
+    print(' '.join(playerSouth) + ', ' + str(i) + ', ' + str(count_value(playerSouth)) + ', south' + ', ' + str(misdeal) + ', ' + str(calculate_nil_percentage(playerSouth)[0]) + ', ' + str(calculate_nil_percentage(playerSouth)[1]) + ', ' + str(calculate_nil_percentage(playerSouth)[2]))
+    print(' '.join(playerWest) + ', ' + str(i) + ', ' + str(count_value(playerWest)) + ', west' + ', ' + str(misdeal) + ', ' + str(calculate_nil_percentage(playerWest)[0]) + ', ' + str(calculate_nil_percentage(playerWest)[1]) + ', ' + str(calculate_nil_percentage(playerWest)[2]))
+
+    
       
       
       
