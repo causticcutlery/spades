@@ -144,9 +144,10 @@ def count_value(hand):
     
     #If nil is more likely, then return 20*nil chance as the hand value
     if(20*nilChance[0] > value):
-        return 20*nilChance[0]
+        countedNil = True
     else:
-        return value
+        countedNil = False
+    return [value, 20*nilChance[0],countedNil]
       
 def deal_hand(deck):
     playerNorth = []
@@ -317,7 +318,7 @@ def calculate_nil_percentage(hand):
     return [chance, sumFaceValue, averageFaceValue]
 
 
-print("hand,round,value,player,misdeal,nil,sum,avg")
+print("hand,round,value,nilchance,tooknil,player,misdeal,nil,sum,avg")
   
 for i in range(10000): 
     dealtCards = deal_hand(deck)
@@ -337,10 +338,10 @@ for i in range(10000):
     print("============================================================")
     '''
 
-    print(' '.join(playerNorth) + ', ' + str(i) + ', ' + str(count_value(playerNorth)) + ', north' + ', ' + str(misdeal) + ', ' + str(calculate_nil_percentage(playerNorth)[0]) + ', ' + str(calculate_nil_percentage(playerNorth)[1]) + ', ' + str(calculate_nil_percentage(playerNorth)[2]))
-    print(' '.join(playerEast) + ', ' + str(i) + ', ' + str(count_value(playerEast)) + ', east' + ', ' + str(misdeal) + ', ' + str(calculate_nil_percentage(playerEast)[0]) + ', ' + str(calculate_nil_percentage(playerEast)[1]) + ', ' + str(calculate_nil_percentage(playerEast)[2]))
-    print(' '.join(playerSouth) + ', ' + str(i) + ', ' + str(count_value(playerSouth)) + ', south' + ', ' + str(misdeal) + ', ' + str(calculate_nil_percentage(playerSouth)[0]) + ', ' + str(calculate_nil_percentage(playerSouth)[1]) + ', ' + str(calculate_nil_percentage(playerSouth)[2]))
-    print(' '.join(playerWest) + ', ' + str(i) + ', ' + str(count_value(playerWest)) + ', west' + ', ' + str(misdeal) + ', ' + str(calculate_nil_percentage(playerWest)[0]) + ', ' + str(calculate_nil_percentage(playerWest)[1]) + ', ' + str(calculate_nil_percentage(playerWest)[2]))
+    print(' '.join(playerNorth) + ', ' + str(i) + ', ' + str(count_value(playerNorth)[0]) + ', ' + str(count_value(playerNorth)[1]) + ', ' + str(count_value(playerNorth)[2]) + ', north' + ', ' + str(misdeal) + ', ' + str(calculate_nil_percentage(playerNorth)[0]) + ', ' + str(calculate_nil_percentage(playerNorth)[1]) + ', ' + str(calculate_nil_percentage(playerNorth)[2]))
+    print(' '.join(playerEast) + ', ' + str(i) + ', ' + str(count_value(playerEast)[0]) + ', ' + str(count_value(playerNorth)[1]) + ', ' + str(count_value(playerNorth)[2]) + ', east' + ', ' + str(misdeal) + ', ' + str(calculate_nil_percentage(playerEast)[0]) + ', ' + str(calculate_nil_percentage(playerEast)[1]) + ', ' + str(calculate_nil_percentage(playerEast)[2]))
+    print(' '.join(playerSouth) + ', ' + str(i) + ', ' + str(count_value(playerSouth)[0]) + ', ' + str(count_value(playerNorth)[1]) + ', ' + str(count_value(playerNorth)[2]) + ', south' + ', ' + str(misdeal) + ', ' + str(calculate_nil_percentage(playerSouth)[0]) + ', ' + str(calculate_nil_percentage(playerSouth)[1]) + ', ' + str(calculate_nil_percentage(playerSouth)[2]))
+    print(' '.join(playerWest) + ', ' + str(i) + ', ' + str(count_value(playerWest)[0]) + ', ' + str(count_value(playerNorth)[1]) + ', ' + str(count_value(playerNorth)[2]) + ', west' + ', ' + str(misdeal) + ', ' + str(calculate_nil_percentage(playerWest)[0]) + ', ' + str(calculate_nil_percentage(playerWest)[1]) + ', ' + str(calculate_nil_percentage(playerWest)[2]))
 
     
       
