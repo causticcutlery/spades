@@ -1,5 +1,6 @@
 from dealer import *
 from hand_math import *
+import csv
 
 #Card is a class that is assigned the following attributes: 
     #a face value (for math functions)
@@ -15,9 +16,8 @@ class Card:
         self.suit = suit
         self.abbreviation = abbreviation
 
-    @classmethod
     def card_abbreviation(self):
-        print(self.abbreviation)
+        return(self.abbreviation)
 
 #Declares the deck as a list of two char strings. 
 #Deck is based on the standard 54 card French suited playing cards with the Deuces of Hearts and Diamonds removed.
@@ -37,7 +37,7 @@ class Player:
     def hand_contents(self):
         hand = []
         for card in self.hand:
-            hand.append(card.abbreviation)
+            hand.append(card.card_abbreviation())
         return (hand)
 
 #List of the four players of the game
@@ -49,10 +49,20 @@ players = assign_cards(players, deal_cards(deck))
 
 
 print(players[0].hand_contents())
+header = ["hand"]
+with open('data/data.csv', 'w', encoding='UTF8', newline='') as f:    
+    writer = csv.writer(f)
     
-for i in range (1000):
-    players = assign_cards(players, deal_cards(deck))
-    print(players[0].hand_contents())
+    writer.writerow(header)
+
+    for i in range (1000):
+        players = assign_cards(players, deal_cards(deck))
+        writer.writerow(players[0].hand_contents())
+        writer.writerow(players[1].hand_contents())
+        writer.writerow(players[2].hand_contents())
+        writer.writerow(players[3].hand_contents())
+        #print(' '.join(players[0].hand_contents()))
+
     
 
 
