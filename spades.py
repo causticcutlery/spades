@@ -48,19 +48,22 @@ players = [Player(0, "north", None), Player(1, "east", None), Player(2, "south",
 players = assign_cards(players, deal_cards(deck))
 
 
-print(players[0].hand_contents())
-header = ["hand"]
+print(' '.join(players[0].hand_contents()))
+header = ["game","player","hand"]
+row = [header]
+
 with open('data/data.csv', 'w', encoding='UTF8', newline='') as f:    
     writer = csv.writer(f)
     
-    writer.writerow(header)
+    writer.writerow(row[0])
 
     for i in range (1000):
         players = assign_cards(players, deal_cards(deck))
-        writer.writerow(players[0].hand_contents())
-        writer.writerow(players[1].hand_contents())
-        writer.writerow(players[2].hand_contents())
-        writer.writerow(players[3].hand_contents())
+        row.append([i, players[0].position, ' '.join(players[0].hand_contents())])
+        
+
+        
+        writer.writerow(row[i+1])
         #print(' '.join(players[0].hand_contents()))
 
     
