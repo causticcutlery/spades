@@ -14,20 +14,21 @@ def fill_csv(players, deck, iterations):
         #player: what position the player is in
         #hand: the hand dealt to the player
         #value: the value of the players hand, which includes context of their whole hand
+        #books counted: the number of books the player counted on walking
         #average face value: the average face value of their hand based only on numerical value
         #nil chance: the chance that the player can go nil
         #misdeal: if the player was dealt no spades, misdeal is true
         #nil: if the player is better off going nil, nil is true
-    header = ["game","player","hand","value","average face value","nil chance","misdeal","nil"]
+    header = ["game","player","hand","value","books counted","average face value","nil chance","misdeal","nil"]
     with open('data/data.csv', 'w', encoding='UTF8', newline='') as f:    
         writer = csv.writer(f)
         writer.writerow(header)
         for i in range (iterations):
-            print("Calculating game\t" + str(i) + "\tof\t" + str(iterations) + "\t. Percentage done: " + str(round((i/iterations),2)))
+            print("Calculating game\t" + str(i+1) + "\tof\t" + str(iterations) + "\t. Percentage done: " + str(round((i/iterations),2)))
             players = assign_cards(players, deck)
             for player in players:
                 value = count_value(player.hand)
-                writer.writerow([i, player.position, ' '.join(player.hand_contents()), value[0], round(value[1],2), round(value[2],2), value[3], value[4]])
+                writer.writerow([i, player.position, ' '.join(player.hand_contents()), value[0], value[1], round(value[2],2), round(value[3],2), value[4], value[5]])
     return 0            
 
 def main():
@@ -48,7 +49,7 @@ def main():
         #--csv to generate a csv with the provided amount of rows
         elif sys.argv[i] in ("--c", "--csv"):
             try:
-                fill_csv(players, deck, int(sys.argv[i+1]))
+                fill_csv(players, deck, int(sys.argv[i+1])) 
             except ValueError as err:
                 print("Invalid input, provide a number")
                 print("Error: " + str(err))
@@ -60,7 +61,7 @@ def main():
             print("Deck TBD")
         #--game to simulate a game
         elif sys.argv[i] in ("--g", "--game"):
-            print("Game TBD")
+            print("Game TBD\n")
             simulate_game(players)
 
     

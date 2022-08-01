@@ -1,9 +1,17 @@
 import random
+from hand_math import count_books 
 
 #Function to simulate a game, given four players with hands
 #TODO: Implement game theory
 def simulate_game(players):
     lead = random.choice(players)
+
+    print("Betting")
+    print("%s has %s and bets %s." %(str(lead.position), str(players[lead.value].hand_contents()), str(count_books(players[lead.value].hand))))
+    print("%s has %s and bets %s." %(str(players[(lead.value+1)%4].position), str(players[(lead.value+1)%4].hand_contents()), str(count_books(players[(lead.value+1)%4].hand))))
+    print("%s has %s and bets %s." %(str(players[(lead.value+2)%4].position), str(players[(lead.value+2)%4].hand_contents()), str(count_books(players[(lead.value+2)%4].hand))))
+    print("%s has %s and bets %s." %(str(players[(lead.value+3)%4].position), str(players[(lead.value+3)%4].hand_contents()), str(count_books(players[(lead.value+3)%4].hand))))
+    print("")
 
     for i in range(0,12):
         cardsPlayed=[players[lead.value].hand[i], players[(lead.value+1)%4].hand[i], players[(lead.value+2)%4].hand[i], players[(lead.value+3)%4].hand[i]]

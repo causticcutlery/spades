@@ -7,11 +7,7 @@ def count_value(hand):
     countedNil = False
 
     #Tally up the count of each suit to save in a list that is used through this function
-    countSpades = (len([card for card in hand if card.suit=="Spades"]))
-    countHearts = (len([card for card in hand if card.suit=="Hearts"]))
-    countClubs = (len([card for card in hand if card.suit=="Clubs"]))
-    countDiamonds = (len([card for card in hand if card.suit=="Diamonds"]))
-    countSuits = [[' ', 'Diamonds','Clubs','Hearts','Spades'],[13, countDiamonds, countClubs, countHearts, countSpades]]
+    countSuits = count_suits(hand)
 
     for card in hand:
         #High spades are worth the most points because they are likely to take books
@@ -20,27 +16,27 @@ def count_value(hand):
         if(card.abbreviation == "BS"):
             value+=6
         elif(card.abbreviation == "LS"):
-            if(countSpades == 1):
+            if(countSuits[1][4] == 1):
                 value+=3
             else:
                 value+=5
         elif(card.abbreviation == "2S"):
-            if(countSpades == 1):
+            if(countSuits[1][4] == 1):
                 value+=2
             else:
                 value+=4
         elif(card.abbreviation == "AS"):
-            if(countSpades == 1):
+            if(countSuits[1][4] == 1):
                 value+=1
             else:
                 value+=3
         elif(card.abbreviation == "KS"):
-            if(countSpades == 1):
+            if(countSuits[1][4] == 1):
                 value+=0
             else:
                 value+=2
         elif(card.abbreviation == "QS"):
-            if(countSpades == 1):
+            if(countSuits[1][4] == 1):
                 value+=0
             else:
                 value+=2
@@ -82,24 +78,30 @@ def count_value(hand):
     #Hands that are void of H,C,D are worth 3 more if there are spades in the hand
     #Value increase is reduced by 1 for each card of that suit, zeroing off at 3 or more of a suit
     #This is due to the likelihood of cutting that suit with spades
-    for counts in countSuits:
-        if(counts[0] == ' ' or counts[0] == 'Spades'):
+    for i in range(0,5):
+        if(countSuits[0][i] == ' ' or countSuits[0][i] == 'Spades'):
             continue
-        elif(counts[1] == 0):
-            if(countSuits[1][4] == 1):
+        elif(countSuits[1][i] == 0):
+            if(countSuits[1][4] >= 1):
                 value += 4 
-            elif(countSuits[1][4] == 2):
+                countSuits[1][4]-=1
+            elif(countSuits[1][4] >= 2):
                 value += 6
-            elif(countSuits[1][4] == 3):
-                value += 7  
-        elif(counts[1] == 1):
-            if(countSuits[1][4] == 1):
+                countSuits[1][4]-=2
+            elif(countSuits[1][4] >= 3):
+                value += 7 
+                countSuits[1][4]-=3
+        elif(countSuits[1][i] == 1):
+            if(countSuits[1][4] >= 1):
                 value += 3 
-            elif(countSuits[1][4] == 2):
+                countSuits[1][4]-=1
+            elif(countSuits[1][4] >= 2):
                 value += 1
-        elif(counts[1] == 2):
-            if(countSuits[1][4] == 1):
+                countSuits[1][4]-=2
+        elif(countSuits[1][i] == 2):
+            if(countSuits[1][4] >= 1):
                 value += 1 
+                countSuits[1][4]-=1
 
     #If a hand is dealt no spades, the player can call a miseal
     if(countSuits[1][4] == 0):
@@ -116,7 +118,7 @@ def count_value(hand):
     else:
         countedNil = False
 
-    return [value, nilChance[0], nilChance[1], misdeal, countedNil]
+    return [value, count_books(hand), nilChance[0], nilChance[1], misdeal, countedNil]
 
 def count_books(hand):
     #TODO Create function to count books in a hand
@@ -241,3 +243,90 @@ def has_card(hand, cardToCheck):
         if(card.abbreviation == cardToCheck):
             return True
     return False
+
+#Function to tally up the count of each suit to save in a list that is used in other calculations
+def count_suits(hand):
+    
+    countSpades = (len([card for card in hand if card.suit=="Spades"]))
+    countHearts = (len([card for card in hand if card.suit=="Hearts"]))
+    countClubs = (len([card for card in hand if card.suit=="Clubs"]))
+    countDiamonds = (len([card for card in hand if card.suit=="Diamonds"]))
+    countSuits = [[' ', 'Diamonds','Clubs','Hearts','Spades'],[13, countDiamonds, countClubs, countHearts, countSpades]]
+
+    return countSuits
+
+#Function to count the books in a hand
+#Logic is very similar to what is used in count_value
+def count_books(hand):
+    books=0
+    countSuits = count_suits(hand)
+    
+    for card in hand:
+        #High spades are worth the most points because they are likely to take books
+        #Accounts for the fact that high spades are worth less if it is the only one spade in the hand
+        #This is due to the inability to protect a spade from being drawn out by a higher spade 
+        if(card.abbreviation == "BS"):
+            books+=1
+        elif(card.abbreviation == "LS"):
+            if(countSuits[1][4] == 1):
+                books+=0.5
+            else:
+                books+=1
+                countSuits[1][4]-=1
+        elif(card.abbreviation == "2S"):
+            if(countSuits[1][4] == 1):
+                books+=0.5
+            else:
+                books+=1
+                countSuits[1][4]-=1
+        
+        #A H/C/D  is  almost always book
+        #Value changes based on the amount of cards in that suit
+        #This is because the more of a suit a hand has, the more likely it is for another player to cut with spades
+        if(card.face == "Ace"):
+            if(countSuits[1][card.suitValue] <= 4):
+                books+=1
+            elif(countSuits[1][card.suitValue] == 5):
+                books+=0.5
+            else:
+                books+=0
+            
+        #K H/C/D is most often a book
+        #Value changes based on the amount of cards in that suit
+        if(card.face == "King"):
+            if(countSuits[1][card.suitValue] == 1):
+                books+=0
+            elif(countSuits[1][card.suitValue] <= 3):
+                books+=1
+            elif(countSuits[1][card.suitValue] == 4):
+                books+=0.5
+            else:
+                books+=0
+
+    #Hands that are void of H,C,D are likely to take books by cutting
+    for i in range(0,5):
+        if(countSuits[0][i] == ' ' or countSuits[0][i] == 'Spades'):
+            continue
+        elif(countSuits[1][i] == 0):
+            if(countSuits[1][4] >= 1):
+                books+=1
+                countSuits[1][4]-=1
+            elif(countSuits[1][4] >= 2):
+                books+=2
+                countSuits[1][4]-=2
+            elif(countSuits[1][4] >= 3):
+                books+=3
+                countSuits[1][4]-=3
+        elif(countSuits[1][i] == 1):
+            if(countSuits[1][4] >= 1):
+                books+=1
+                countSuits[1][4]-=1
+            elif(countSuits[1][4] >= 2):
+                books+=2
+                countSuits[1][4]-=2
+        elif(countSuits[1][i] == 2):
+            if(countSuits[1][4] >= 1):
+                books+=1 
+                countSuits[1][4]-=1
+
+    return round(books)
