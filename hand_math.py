@@ -118,7 +118,7 @@ def count_value(hand):
     else:
         countedNil = False
 
-    return [value, count_books(hand), nilChance[0], nilChance[1], misdeal, countedNil]
+    return [value, nilChance[0], nilChance[1], misdeal, countedNil]
 
 def count_books(hand):
     #TODO Create function to count books in a hand
