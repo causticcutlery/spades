@@ -19,7 +19,7 @@ def fill_csv(players, deck, iterations):
         #nil chance: the chance that the player can go nil
         #misdeal: if the player was dealt no spades, misdeal is true
         #nil: if the player is better off going nil, nil is true
-    header = ["game","player","hand","value","average face value","nil chance","books counted","misdeal","nil"]
+    header = ["game","player","hand","value","books counted","nil chance","average face value","misdeal","nil"]
     with open('data/data.csv', 'w', encoding='UTF8', newline='') as f:    
         writer = csv.writer(f)
         writer.writerow(header)
