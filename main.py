@@ -22,7 +22,8 @@ def fill_csv(players, deck, iterations):
         writer = csv.writer(f)
         writer.writerow(header)
         for i in range (iterations):
-            print("Calculating game\t" + str(i+1) + "\tof\t" + str(iterations) + "\t. Percentage done: " + str(round((i/iterations),2)))
+            if(i%1000==0):
+                print("Calculating game\t" + str(i+1) + "\tof\t" + str(iterations) + "\t. Percentage done: " + str(round((i/iterations),2)))
             players = assign_cards(players, deck)
             
             #count books
@@ -59,6 +60,17 @@ def main():
         elif sys.argv[i] in ("--c", "--csv"):
             try:
                 fill_csv(players, deck, int(sys.argv[i+1]))
+            except ValueError as err:
+                print("Invalid input, provide a number")
+                print("Error: " + str(err))
+            except Exception as err:
+                print("You broke something\n" + str(err))
+                raise err
+            break
+        #--csvmt to generate a csv with the provided amount of rows
+        elif sys.argv[i] in ("--cmt", "--csvmt"):
+            try:
+                fill_csv_mt(players, deck, int(sys.argv[i+1]))
             except ValueError as err:
                 print("Invalid input, provide a number")
                 print("Error: " + str(err))
