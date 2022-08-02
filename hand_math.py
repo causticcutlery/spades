@@ -16,27 +16,27 @@ def count_value(hand):
         if(card.abbreviation == "BS"):
             value+=6
         elif(card.abbreviation == "LS"):
-            if(countSuits[1][4] == 1):
+            if(countSuits[1][countSuits[0].index('Spades')] == 1):
                 value+=3
             else:
                 value+=5
         elif(card.abbreviation == "2S"):
-            if(countSuits[1][4] == 1):
+            if(countSuits[1][countSuits[0].index('Spades')] == 1):
                 value+=2
             else:
                 value+=4
         elif(card.abbreviation == "AS"):
-            if(countSuits[1][4] == 1):
+            if(countSuits[1][countSuits[0].index('Spades')] == 1):
                 value+=1
             else:
                 value+=3
         elif(card.abbreviation == "KS"):
-            if(countSuits[1][4] == 1):
+            if(countSuits[1][countSuits[0].index('Spades')] == 1):
                 value+=0
             else:
                 value+=2
         elif(card.abbreviation == "QS"):
-            if(countSuits[1][4] == 1):
+            if(countSuits[1][countSuits[0].index('Spades')] == 1):
                 value+=0
             else:
                 value+=2
@@ -82,29 +82,29 @@ def count_value(hand):
         if(countSuits[0][i] == ' ' or countSuits[0][i] == 'Spades'):
             continue
         elif(countSuits[1][i] == 0):
-            if(countSuits[1][4] >= 1):
+            if(countSuits[1][countSuits[0].index('Spades')] >= 1):
                 value += 4 
-                countSuits[1][4]-=1
-            elif(countSuits[1][4] >= 2):
+                countSuits[1][countSuits[0].index('Spades')]-=1
+            elif(countSuits[1][countSuits[0].index('Spades')] >= 2):
                 value += 6
-                countSuits[1][4]-=2
-            elif(countSuits[1][4] >= 3):
+                countSuits[1][countSuits[0].index('Spades')]-=2
+            elif(countSuits[1][countSuits[0].index('Spades')] >= 3):
                 value += 7 
-                countSuits[1][4]-=3
+                countSuits[1][countSuits[0].index('Spades')]-=3
         elif(countSuits[1][i] == 1):
-            if(countSuits[1][4] >= 1):
+            if(countSuits[1][countSuits[0].index('Spades')] >= 1):
                 value += 3 
-                countSuits[1][4]-=1
-            elif(countSuits[1][4] >= 2):
+                countSuits[1][countSuits[0].index('Spades')]-=1
+            elif(countSuits[1][countSuits[0].index('Spades')] >= 2):
                 value += 1
-                countSuits[1][4]-=2
+                countSuits[1][countSuits[0].index('Spades')]-=2
         elif(countSuits[1][i] == 2):
-            if(countSuits[1][4] >= 1):
+            if(countSuits[1][countSuits[0].index('Spades')] >= 1):
                 value += 1 
-                countSuits[1][4]-=1
+                countSuits[1][countSuits[0].index('Spades')]-=1
 
     #If a hand is dealt no spades, the player can call a miseal
-    if(countSuits[1][4] == 0):
+    if(countSuits[1][countSuits[0].index('Spades')] == 0):
         misdeal = True
     
     #Calculates the chance a player can go nil
@@ -152,61 +152,61 @@ def calculate_nil_percentage(hand, countSuits):
     #Percentages pulled from Monty VanDover's "The Complete Book of Spades" section on "Probabilities of Distribution."
     if(has_card(hand,"BS")):
         chance *= 0.0
-    if(has_card(hand,"LS") and has_card(hand,"2S")):
+    elif(has_card(hand,"LS") and has_card(hand,"2S")):
         chance *= 0.0
-    if(has_card(hand,"2S") and has_card(hand,"AS") and has_card(hand,"KS")):
+    elif(has_card(hand,"2S") and has_card(hand,"AS") and has_card(hand,"KS")):
         chance *= 0.0        
-    if(has_card(hand,"LS")):
+    elif(has_card(hand,"LS")):
         chance *= 0.33
-    if(has_card(hand,"2S")):
+    elif(has_card(hand,"2S")):
         chance *= 0.56
-    if(has_card(hand,"AS")):
+    elif(has_card(hand,"AS")):
         chance *= 0.70
-    if(has_card(hand,"KS")):
+    elif(has_card(hand,"KS")):
         chance *= 0.81
-    if(has_card(hand,"QS")):
+    elif(has_card(hand,"QS")):
         chance *= 0.88
-    if(has_card(hand,"2S") and has_card(hand,"AS")):
+    elif(has_card(hand,"2S") and has_card(hand,"AS")):
         chance *= 0.11
-    if((has_card(hand,"2S") and has_card(hand,"KS")) or (has_card(hand,"AS") and has_card(hand,"KS"))):
+    elif((has_card(hand,"2S") and has_card(hand,"KS")) or (has_card(hand,"AS") and has_card(hand,"KS"))):
         chance *= 0.11
-    if((has_card(hand,"AS") and has_card(hand,"QS")) or (has_card(hand,"KS") and has_card(hand,"QS"))):
+    elif((has_card(hand,"AS") and has_card(hand,"QS")) or (has_card(hand,"KS") and has_card(hand,"QS"))):
         chance *= 0.41
-    if((has_card(hand,"KS") and has_card(hand,"JS")) or (has_card(hand,"QS") and has_card(hand,"JS"))):
+    elif((has_card(hand,"KS") and has_card(hand,"JS")) or (has_card(hand,"QS") and has_card(hand,"JS"))):
         chance *= 0.55       
-    if((has_card(hand,"AS") and has_card(hand,"KS") and has_card(hand,"JS")) or (has_card(hand,"KS") and has_card(hand,"QS") and has_card(hand,"JS"))):
+    elif((has_card(hand,"AS") and has_card(hand,"KS") and has_card(hand,"JS")) or (has_card(hand,"KS") and has_card(hand,"QS") and has_card(hand,"JS"))):
         chance *= 0.10
-    if((has_card(hand,"KS") and has_card(hand,"QS") and has_card(hand,"TS")) or (has_card(hand,"QS") and has_card(hand,"JS") and has_card(hand,"TS"))):
+    elif((has_card(hand,"KS") and has_card(hand,"QS") and has_card(hand,"TS")) or (has_card(hand,"QS") and has_card(hand,"JS") and has_card(hand,"TS"))):
         chance *= 0.20
-    if((has_card(hand,"QS") and has_card(hand,"JS") and has_card(hand,"9S")) or (has_card(hand,"JS") and has_card(hand,"TS") and has_card(hand,"9S"))):
+    elif((has_card(hand,"QS") and has_card(hand,"JS") and has_card(hand,"9S")) or (has_card(hand,"JS") and has_card(hand,"TS") and has_card(hand,"9S"))):
         chance *= 0.31           
     
     #Similar to the above spades statistics. There exists scenarios outside of what is being accounted for here
     #Therefore these statistics are not 100% accurate, but should be close enough
-    if(has_card(hand,"AH") and countSuits[1][3] == 1 and not voidSuit): 
+    if(has_card(hand,"AH") and countSuits[1][countSuits[0].index('Hearts')] == 1 and not voidSuit): 
         chance *= 0.0     
-    if(has_card(hand,"AC") and countSuits[1][2] == 1 and not voidSuit):
+    if(has_card(hand,"AC") and countSuits[1][countSuits[0].index('Clubs')] == 1 and not voidSuit):
         chance *= 0.0       
-    if(has_card(hand,"AD") and countSuits[1][1] == 1 and not voidSuit):
+    if(has_card(hand,"AD") and countSuits[1][countSuits[0].index('Diamonds')] == 1 and not voidSuit):
         chance *= 0.0
-    if(has_card(hand,"KH") and countSuits[1][3] == 1 and not voidSuit):
+    if(has_card(hand,"KH") and countSuits[1][countSuits[0].index('Hearts')] == 1 and not voidSuit):
         chance *= 0.33        
-    if(has_card(hand,"KC") and countSuits[1][2] == 1 and not voidSuit):
+    if(has_card(hand,"KC") and countSuits[1][countSuits[0].index('Clubs')] == 1 and not voidSuit):
         chance *= 0.33        
-    if(has_card(hand,"KD") and countSuits[1][1] == 1 and not voidSuit):
+    if(has_card(hand,"KD") and countSuits[1][countSuits[0].index('Diamonds')] == 1 and not voidSuit):
         chance *= 0.33         
     
     #Adjusts nil chance based on the amount of spades in a hand
     #TODO make this more math by determining stats of spades distribution
-    if(countSuits[1][4] >= 8):
+    if(countSuits[1][countSuits[0].index('Spades')] >= 8):
         chance *= 0.0
-    elif(countSuits[1][4] >= 6):
+    elif(countSuits[1][countSuits[0].index('Spades')] >= 6):
         chance *= 0.2
-    elif(countSuits[1][4] >= 4):
+    elif(countSuits[1][countSuits[0].index('Spades')] >= 4):
         chance *= 0.6
-    elif(countSuits[1][4] >= 2):
+    elif(countSuits[1][countSuits[0].index('Spades')] >= 2):
         chance *= 0.8
-    elif(countSuits[1][4] == 0):
+    elif(countSuits[1][countSuits[0].index('Spades')] == 0):
         chance *= 1.20
     
     #Uses the distribution of face value sums to adjust the nil bet accordingly
@@ -246,7 +246,6 @@ def has_card(hand, cardToCheck):
 
 #Function to tally up the count of each suit to save in a list that is used in other calculations
 def count_suits(hand):
-    
     countSpades = (len([card for card in hand if card.suit=="Spades"]))
     countHearts = (len([card for card in hand if card.suit=="Hearts"]))
     countClubs = (len([card for card in hand if card.suit=="Clubs"]))
@@ -268,17 +267,17 @@ def count_books(hand):
         if(card.abbreviation == "BS"):
             books+=1
         elif(card.abbreviation == "LS"):
-            if(countSuits[1][4] == 1):
+            if(countSuits[1][countSuits[0].index('Spades')] == 1):
                 books+=0.5
             else:
                 books+=1
                 countSuits[1][4]-=1
         elif(card.abbreviation == "2S"):
-            if(countSuits[1][4] == 1):
+            if(countSuits[1][countSuits[0].index('Spades')] == 1):
                 books+=0.5
             else:
                 books+=1
-                countSuits[1][4]-=1
+                countSuits[1][countSuits[0].index('Spades')]-=1
         
         #A H/C/D  is  almost always book
         #Value changes based on the amount of cards in that suit
@@ -308,25 +307,25 @@ def count_books(hand):
         if(countSuits[0][i] == ' ' or countSuits[0][i] == 'Spades'):
             continue
         elif(countSuits[1][i] == 0):
-            if(countSuits[1][4] >= 1):
+            if(countSuits[1][countSuits[0].index('Spades')] >= 1):
                 books+=1
-                countSuits[1][4]-=1
-            elif(countSuits[1][4] >= 2):
+                countSuits[1][countSuits[0].index('Spades')]-=1
+            elif(countSuits[1][countSuits[0].index('Spades')] >= 2):
                 books+=2
-                countSuits[1][4]-=2
-            elif(countSuits[1][4] >= 3):
+                countSuits[1][countSuits[0].index('Spades')]-=2
+            elif(countSuits[1][countSuits[0].index('Spades')] >= 3):
                 books+=3
-                countSuits[1][4]-=3
+                countSuits[1][countSuits[0].index('Spades')]-=3
         elif(countSuits[1][i] == 1):
-            if(countSuits[1][4] >= 1):
+            if(countSuits[1][countSuits[0].index('Spades')] >= 1):
                 books+=1
-                countSuits[1][4]-=1
-            elif(countSuits[1][4] >= 2):
+                countSuits[1][countSuits[0].index('Spades')]-=1
+            elif(countSuits[1][countSuits[0].index('Spades')] >= 2):
                 books+=2
-                countSuits[1][4]-=2
+                countSuits[1][countSuits[0].index('Spades')]-=2
         elif(countSuits[1][i] == 2):
-            if(countSuits[1][4] >= 1):
+            if(countSuits[1][countSuits[0].index('Spades')] >= 1):
                 books+=1 
-                countSuits[1][4]-=1
+                countSuits[1][countSuits[0].index('Spades')]-=1
 
     return round(books)
