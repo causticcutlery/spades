@@ -45,7 +45,9 @@ def main():
         #--help to display help screen
         #TODO: Make help screen
         if sys.argv[i] in ("--h", "--help"):
-            print("Help TBD")
+            f = open("readme.md", "r")
+            print(f.read())
+            break
         #--csv to generate a csv with the provided amount of rows
         elif sys.argv[i] in ("--c", "--csv"):
             try:
@@ -55,14 +57,27 @@ def main():
                 print("Error: " + str(err))
             except Exception as err:
                 print("You broke something\n" + str(err))
+            break
         #--deck to specify which deck variation will be used
         #TODO: this
         elif sys.argv[i] in ("--d", "--deck"):
-            print("Deck TBD")
+            if(sys.argv[i+1]=="JJDA"):
+                deck = create_deck("JJDA")
+            elif(sys.argv[i+1]=="JJDD"):
+                deck = create_deck("JJDD")
+            elif(sys.argv[i+1]=="A-High"):
+                deck = create_deck("A-High")
+            for card in deck:
+                print(card.card_abbreviation())
+            break
         #--game to simulate a game
         elif sys.argv[i] in ("--g", "--game"):
             print("Game TBD\n")
             simulate_game(players)
+            break
+        else:
+            print("Argument not found. Try --help")
+            break
 
     
     
