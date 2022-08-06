@@ -1,6 +1,6 @@
 from dealer import create_deck, assign_cards, create_players
 from hand_math import count_value, count_books
-from spades import simulate_game
+from spades import simulate_round
 import csv
 import sys
 
@@ -83,7 +83,7 @@ def main():
         #--game to simulate a game
         elif sys.argv[i] in ("--g", "--game"):
             print("Game TBD\n")
-            simulate_game(players)
+            simulate_round(players)
             break
         else:
             print("Argument not found. Try --help")

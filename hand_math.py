@@ -119,10 +119,6 @@ def count_value(hand):
         countedNil = False
 
     return [value, nilChance[0], nilChance[1], misdeal, countedNil]
-
-def count_books(hand):
-    #TODO Create function to count books in a hand
-    return 0
   
 def team():
     #TODO Create a function to take into consideration the team aspect
